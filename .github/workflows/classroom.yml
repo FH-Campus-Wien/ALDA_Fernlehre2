@@ -24,7 +24,7 @@ jobs:
           java-version: '21'
 
       - name: testBinTreeInsert
-        id: testBinTreeInsert
+        id: test-bintree-insert
         uses: classroom-resources/autograding-command-grader@v1
         with:
           test-name: testBinTreeInsert
@@ -34,7 +34,7 @@ jobs:
           max-score: 1
 
       - name: testBinTreeLookup
-        id: testBinTreeLookup
+        id: test-bintree-lookup
         uses: classroom-resources/autograding-command-grader@v1
         with:
           test-name: testBinTreeLookup
@@ -44,7 +44,7 @@ jobs:
           max-score: 1
 
       - name: testAvlCountAndSimpleRotations
-        id: testAvlCountAndSimpleRotations
+        id: test-avl-count-and-simple-rotations
         uses: classroom-resources/autograding-command-grader@v1
         with:
           test-name: testAvlCountAndSimpleRotations
@@ -54,7 +54,7 @@ jobs:
           max-score: 1
 
       - name: testAvlDoubleRotations
-        id: testAvlDoubleRotations
+        id: test-avl-double-rotations
         uses: classroom-resources/autograding-command-grader@v1
         with:
           test-name: testAvlDoubleRotations
@@ -64,7 +64,7 @@ jobs:
           max-score: 1
 
       - name: testAvlComplexDoubleRotation
-        id: testAvlComplexDoubleRotation
+        id: test-avl-complex-double-rotation
         uses: classroom-resources/autograding-command-grader@v1
         with:
           test-name: testAvlComplexDoubleRotation
@@ -74,12 +74,13 @@ jobs:
           max-score: 1
 
       - name: Autograding Reporter
+        if: always()
         uses: classroom-resources/autograding-grading-reporter@v1
         env:
-          TESTBINTREEINSERT_RESULTS: "${{steps.testBinTreeInsert.outputs.result}}"
-          TESTBINTREELOOKUP_RESULTS: "${{steps.testBinTreeLookup.outputs.result}}"
-          TESTAVLCOUNTANDSIMPLE_ROTATIONS_RESULTS: "${{steps.testAvlCountAndSimpleRotations.outputs.result}}"
-          TESTAVLDOUBLEROTATIONS_RESULTS: "${{steps.testAvlDoubleRotations.outputs.result}}"
-          TESTAVLCOMPLEXDOUBLEROTATION_RESULTS: "${{steps.testAvlComplexDoubleRotation.outputs.result}}"
+          TEST-BINTREE-INSERT_RESULTS: "${{steps.test-bintree-insert.outputs.result}}"
+          TEST-BINTREE-LOOKUP_RESULTS: "${{steps.test-bintree-lookup.outputs.result}}"
+          TEST-AVL-COUNT-AND-SIMPLE-ROTATIONS_RESULTS: "${{steps.test-avl-count-and-simple-rotations.outputs.result}}"
+          TEST-AVL-DOUBLE-ROTATIONS_RESULTS: "${{steps.test-avl-double-rotations.outputs.result}}"
+          TEST-AVL-COMPLEX-DOUBLE-ROTATION_RESULTS: "${{steps.test-avl-complex-double-rotation.outputs.result}}"
         with:
-          runners: testBinTreeInsert,testBinTreeLookup,testAvlCountAndSimpleRotations,testAvlDoubleRotations,testAvlComplexDoubleRotation
+          runners: test-bintree-insert,test-bintree-lookup,test-avl-count-and-simple-rotations,test-avl-double-rotations,test-avl-complex-double-rotation
