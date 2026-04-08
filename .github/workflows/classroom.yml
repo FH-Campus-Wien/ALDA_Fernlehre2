@@ -1,0 +1,85 @@
+name: Autograding Tests
+
+on:
+  push:
+  repository_dispatch:
+
+permissions:
+  checks: write
+  actions: read
+  contents: read
+
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'corretto'
+          java-version: '21'
+
+      - name: testBinTreeInsert
+        id: testBinTreeInsert
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: testBinTreeInsert
+          setup-command: ''
+          command: ./gradlew test --tests at.ac.hcw.bintree.BinTreeTest.insertCreatesRootNode --tests at.ac.hcw.bintree.BinTreeTest.insertPlacesSmallerKeysLeftAndGreaterKeysRight
+          timeout: 1
+          max-score: 1
+
+      - name: testBinTreeLookup
+        id: testBinTreeLookup
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: testBinTreeLookup
+          setup-command: ''
+          command: ./gradlew test --tests at.ac.hcw.bintree.BinTreeTest.duplicateKeyUpdatesDataWithoutIncreasingNodeCount --tests at.ac.hcw.bintree.BinTreeTest.lookupReturnsStoredDataForExistingKey --tests at.ac.hcw.bintree.BinTreeTest.lookupReturnsNullForMissingKey
+          timeout: 1
+          max-score: 1
+
+      - name: testAvlCountAndSimpleRotations
+        id: testAvlCountAndSimpleRotations
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: testAvlCountAndSimpleRotations
+          setup-command: ''
+          command: ./gradlew test --tests at.ac.hcw.bintree.AvlTreeTest.insertCountsNodesInAvlTree --tests at.ac.hcw.bintree.AvlTreeTest.rightRotationBalancesLeftLeftCase --tests at.ac.hcw.bintree.AvlTreeTest.leftRotationBalancesRightRightCase
+          timeout: 1
+          max-score: 1
+
+      - name: testAvlDoubleRotations
+        id: testAvlDoubleRotations
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: testAvlDoubleRotations
+          setup-command: ''
+          command: ./gradlew test --tests at.ac.hcw.bintree.AvlTreeTest.leftRightRotationBalancesLeftRightCase --tests at.ac.hcw.bintree.AvlTreeTest.rightLeftRotationBalancesRightLeftCase
+          timeout: 1
+          max-score: 1
+
+      - name: testAvlComplexDoubleRotation
+        id: testAvlComplexDoubleRotation
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: testAvlComplexDoubleRotation
+          setup-command: ''
+          command: ./gradlew test --tests at.ac.hcw.bintree.AvlTreeTest.leftRightRotationPreservesGrandchildrenSubtrees
+          timeout: 1
+          max-score: 1
+
+      - name: Autograding Reporter
+        uses: classroom-resources/autograding-grading-reporter@v1
+        env:
+          TESTBINTREEINSERT_RESULTS: "${{steps.testBinTreeInsert.outputs.result}}"
+          TESTBINTREELOOKUP_RESULTS: "${{steps.testBinTreeLookup.outputs.result}}"
+          TESTAVLCOUNTANDSIMPLE_ROTATIONS_RESULTS: "${{steps.testAvlCountAndSimpleRotations.outputs.result}}"
+          TESTAVLDOUBLEROTATIONS_RESULTS: "${{steps.testAvlDoubleRotations.outputs.result}}"
+          TESTAVLCOMPLEXDOUBLEROTATION_RESULTS: "${{steps.testAvlComplexDoubleRotation.outputs.result}}"
+        with:
+          runners: testBinTreeInsert,testBinTreeLookup,testAvlCountAndSimpleRotations,testAvlDoubleRotations,testAvlComplexDoubleRotation
